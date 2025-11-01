@@ -4,5 +4,6 @@
 ##
 ################################################################################
 
-add_executable(lualua lualua.cpp)
-target_link_libraries(lualua yq_core yq_lua yq_process)
+if(Build_Vulkan)
+    add_subdirectory(luavk)
+endif()

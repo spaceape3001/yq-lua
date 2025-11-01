@@ -4,5 +4,13 @@
 ##
 ################################################################################
 
-add_executable(lualua lualua.cpp)
-target_link_libraries(lualua yq_core yq_lua yq_process)
+add_executable(luavk 
+    LuaWin.cpp
+    main.cpp
+)
+target_link_libraries(luavk 
+PUBLIC
+    yq_tachyon yq_lua yq_luavk
+PRIVATE
+    ImGuiFileDialog
+)
