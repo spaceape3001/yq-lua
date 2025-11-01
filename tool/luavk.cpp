@@ -6,13 +6,13 @@
 
 #include <yq/process/PluginLoader.hpp>
 
-#include <tachyon/MyImGui.hpp>
-#include <tachyon/application.hpp>
-#include <tachyon/viewer.hpp>
-#include <tachyon/widget.hpp>
+#include <yq/tachyon/MyImGui.hpp>
+#include <yq/tachyon/application.hpp>
+#include <yq/tachyon/viewer.hpp>
+#include <yq/tachyon/widget.hpp>
 
-#include <tachyon/api/Tachyon.hxx>
-#include <tachyon/ui/UIWriters.hxx>
+#include <yq/tachyon/api/Tachyon.hxx>
+#include <yq/tachyon/ui/UIWriters.hxx>
 #include <ImGuiFileDialog.h>
 
 using namespace yq;
