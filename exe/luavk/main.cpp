@@ -37,8 +37,11 @@ int main(int argc, char* argv[])
 
     app.start();
     
-    Ref<LuaTVM> tvm = LuaTVM::create_on<LuaTVM>(AUXILLARY);
+    Ref<LuaTVM> tvm = LuaTVM::create<LuaTVM>();
     Ref<LuaWin> w   = LuaWin::create<LuaWin>(tvm->id());
+    tvm -> subscribe(w->id());
+    tvm -> owner(PUSH, AUXILLARY);
+    
     app.run(w);
     return 0;
 }

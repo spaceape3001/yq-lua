@@ -37,12 +37,12 @@ namespace yq::lua {
 
         if(lua_getglobal(l, key) != LUA_OK)
             return errors::lua_badglobal();
-        auto ret = boolean(l, STACK, -1);
+        auto ret = boolean(l, -1);
         lua_pop(l, -1);
         return ret;
     }
 
-    boolean_x           boolean(lua_State*l, stack_k, int n)
+    boolean_x           boolean(lua_State*l, int n)
     {
         if(!l)
             return errors::lua_null();
@@ -60,12 +60,12 @@ namespace yq::lua {
 
         if(lua_getglobal(l, key) != LUA_OK)
             return errors::lua_badglobal();
-        auto ret = double_(l, STACK, -1);
+        auto ret = double_(l, -1);
         lua_pop(l, -1);
         return ret;
     }
 
-    double_x            double_(lua_State*l, stack_k, int n)
+    double_x            double_(lua_State*l, int n)
     {
         if(!l)
             return errors::lua_null();
@@ -115,7 +115,7 @@ namespace yq::lua {
         return std::error_code();
     }
 
-    int64_x             integer(lua_State* l, global_k, const char* key)
+    integer_x             integer(lua_State* l, global_k, const char* key)
     {
         if(!l)
             return errors::lua_null();
@@ -126,17 +126,17 @@ namespace yq::lua {
 
         if(lua_getglobal(l, key) != LUA_OK)
             return errors::lua_badglobal();
-        auto ret = integer(l, STACK, -1);
+        auto ret = integer(l, -1);
         lua_pop(l, -1);
         return ret;
     }
     
-    int64_x             integer(lua_State* l, stack_k, int n)
+    integer_x             integer(lua_State* l, int n)
     {
         if(!l)
             return errors::lua_null();
         int success    = 0;
-        int64_t  v   = lua_tointegerx(l, n, &success);
+        int  v   = lua_tointegerx(l, n, &success);
         if(!success)
             return errors::lua_notnumber();
         return v;
@@ -155,12 +155,12 @@ namespace yq::lua {
         
         if(lua_getglobal(l, key) != LUA_OK)
             return errors::lua_badglobal();
-        auto ret = pointer(l, STACK, -1);
+        auto ret = pointer(l, -1);
         lua_pop(l, -1);
         return ret;
     }
     
-    void_ptr_x          pointer(lua_State* l, stack_k, int n)
+    void_ptr_x          pointer(lua_State* l, int n)
     {
         if(!l)
             return errors::lua_null();
@@ -235,6 +235,28 @@ namespace yq::lua {
         if(!l)
             return errors::lua_null();
         lua_pushlightuserdata(l, v);
+        return {};
+    }
+
+    std::error_code     push(lua_State*l, FNLuaCallback fn)
+    {
+        if(!l)
+            return errors::lua_null();
+        if(!fn)
+            return errors::null_pointer();
+        lua_pushcfunction(l, fn);
+        return {};
+    }
+    
+    std::error_code     push(lua_State*l, FNLuaCallback fn, size_t n)
+    {
+        if(!l)
+            return errors::lua_null();
+        if(!fn)
+            return errors::null_pointer();
+        if(n>255)
+            return errors::lua_too_many_upvalues();
+        lua_pushcclosure(l, fn, (int) n);
         return {};
     }
 
@@ -321,7 +343,7 @@ namespace yq::lua {
         if(lua_getglobal(l, key) != LUA_OK)
             return errors::lua_badglobal();
             
-        auto x              = string(l, STACK, -1);
+        auto x              = string(l, -1);
         string_x    ret;
         if(x){
             ret     = std::string(*x);
@@ -333,7 +355,7 @@ namespace yq::lua {
         return ret;
     }
 
-    string_view_x       string(lua_State*l, stack_k, int n)
+    string_view_x       string(lua_State*l, int n)
     {
         if(!l)
             return errors::lua_null();
@@ -370,7 +392,7 @@ namespace yq::lua {
         }
     }
 
-    any_x  value(lua_State* l, stack_k, int n)
+    any_x  value(lua_State* l, int n)
     {
         if(!l)
             return errors::lua_null();
@@ -400,14 +422,14 @@ namespace yq::lua {
         if(lua_getglobal(l, key) != LUA_OK)
             return errors::lua_badglobal();
             
-        auto ret            = voidptr(l, STACK, -1);
+        auto ret            = voidptr(l, -1);
         lua_pop(l, -1);
         return ret;
     }
 
 
     //! Returns LIGHTWEIGHT user data (only)
-    void_ptr_x          voidptr(lua_State* l, stack_k, int n)
+    void_ptr_x          voidptr(lua_State* l, int n)
     {
         if(!l)
             return errors::lua_null();

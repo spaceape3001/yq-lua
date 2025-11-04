@@ -6,6 +6,7 @@
 
 #include "LuaWin.hpp"
 #include <yq/tachyon/MyImGui.hpp>
+#include <yq/tachyon/api/Payload.hpp>
 #include <yq/tachyon/api/WidgetMetaWriter.hpp>
 #include <yq/tachyon/ui/UIWriters.hxx>
 #include <ImGuiFileDialog.h>
@@ -21,6 +22,10 @@ LuaWin::LuaWin(TachyonID luavm) : m_lua(luavm)
 }
 
 LuaWin::~LuaWin()
+{
+}
+
+void    LuaWin::_script(const std::filesystem::path& fp)
 {
 }
 
@@ -43,6 +48,21 @@ void    LuaWin::imgui(ViContext&u)
             ImGuiFileDialog::Instance()->Close();
         }
     }
+}
+
+void LuaWin::cmd_lua_file()
+{
+}
+
+void LuaWin::cmd_user_input(const Payload& pay)
+{
+    if(pay.arguments().empty())
+        return ;
+    auto   line    = to_string(pay.arguments()[0]);
+    if(!line)
+        return ;
+    
+    
 }
 
 ////////////////////////////////////

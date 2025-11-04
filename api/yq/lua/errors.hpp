@@ -17,8 +17,10 @@ namespace yq::errors {
     using lua_memory                = error_db::entry<"Lua memory allocation error">;
     using lua_notnumber             = error_db::entry<"Lua value is not, nor could be converted to, a number">;
     using lua_null                  = error_db::entry<"Null LuaState">;
+    using lua_value_out_of_range    = error_db::entry<"Value is out of range">;
     using lua_runtime               = error_db::entry<"Runtime Lua error">;
     using lua_syntax                = error_db::entry<"Lua syntax error">;
+    using lua_too_many_upvalues     = error_db::entry<"Too many upvalues for LUA function">;
     using lua_unexpected            = error_db::entry<"Unexpected Lua error">;
     using lua_yieldcode             = error_db::entry<"Lua thread/coroutine yielding">;
 }

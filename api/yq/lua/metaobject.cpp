@@ -99,7 +99,7 @@ namespace yq::lua {
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //  API
 
-    Object*             object(lua_State* l, stack_k, int n)
+    Object*             object(lua_State* l, int n)
     {
         if(!l)
             return nullptr;
@@ -107,8 +107,11 @@ namespace yq::lua {
         if(!lua_istable(l, n))
             return nullptr;
             
-        Object* obj                 = _object(l, n);
         const ObjectMeta*   meta    = _meta(l, n);
+        if(!meta)
+            return nullptr;
+
+        Object* obj                 = _object(l, n);
         if(meta != &obj->metaInfo())    // sanity check
             return nullptr;
         
@@ -119,7 +122,7 @@ namespace yq::lua {
         return obj;
     }
 
-    const Object*       object(lua_State* l, stack_k, int n, const_k)
+    const Object*       object(lua_State* l, int n, const_k)
     {
         if(!l)
             return nullptr;
@@ -127,13 +130,63 @@ namespace yq::lua {
         if(!lua_istable(l, n))
             return nullptr;
             
-        const Object*       obj     = _object(l, n);
         const ObjectMeta*   meta    = _meta(l, n);
+        if(!meta)
+            return nullptr;
+
+        const Object*       obj     = _object(l, n);
         if(meta != &obj->metaInfo())    // sanity check
             return nullptr;
         return obj;
     }
 
+    Object*             object(lua_State* l, int n, const ObjectMeta& om)
+    {
+        if(!l)
+            return nullptr;
+            
+        if(!lua_istable(l, n))
+            return nullptr;
+            
+        const ObjectMeta*   meta    = _meta(l, n);
+        if(!meta)
+            return nullptr;
+            
+        if(!meta->is_base(om))
+            return nullptr;
+
+        Object* obj                 = _object(l, n);
+        if(meta != &obj->metaInfo())    // sanity check
+            return nullptr;
+        
+        XFlags  flags               = _flags(l, n);
+        if(flags(X::Const))
+            return nullptr;
+            
+        return obj;
+    }
+    
+    const Object*       object(lua_State* l, int n, const ObjectMeta& om, const_k)
+    {
+        if(!l)
+            return nullptr;
+            
+        if(!lua_istable(l, n))
+            return nullptr;
+            
+        const ObjectMeta*   meta    = _meta(l, n);
+        if(!meta)
+            return nullptr;
+
+        if(!meta->is_base(om))
+            return nullptr;
+
+        const Object*       obj     = _object(l, n);
+        if(meta != &obj->metaInfo())    // sanity check
+            return nullptr;
+        return obj;
+    }
+    
     
     std::error_code     push(lua_State* l, Object* obj, XFlags flags)
     {
