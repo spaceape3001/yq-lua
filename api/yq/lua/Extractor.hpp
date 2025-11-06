@@ -7,7 +7,7 @@
 #pragma once
 
 #include <yq/errors.hpp>
-#include <yq/lua/lualua.hpp>
+#include <yq/lua/lualua.hxx>
 #include <yq/core/Any.hpp>
 #include <yq/core/Object.hpp>
 
@@ -128,7 +128,7 @@ namespace yq::lua {
     
     template <>
     struct Extractor<Object*> {
-        static Object*   get(lua_State*l, int n)
+        static object_ptr_x  get(lua_State*l, int n)
         {
             return object(l, n);
         }
@@ -136,7 +136,7 @@ namespace yq::lua {
     
     template <>
     struct Extractor<const Object*> {
-        static Object*   get(lua_State*l, int n)
+        static object_cptr_x   get(lua_State*l, int n)
         {
             return object(l, n);
         }
@@ -167,20 +167,20 @@ namespace yq::lua {
     };
     
     template <typename Obj>
-    requires (std::derived_from<Obj, Object>)
+    requires (std::is_base_of_v<Object, Obj> && !std::is_same_v<Obj,Object>)
     struct Extractor<Obj*> {
-        static Obj*   get(lua_State* l, int n)
+        static Expect<Obj*>   get(lua_State* l, int n)
         {
-            return static_cast<Obj*>(object(l, n, meta<Obj>()));
+            return object_as<Obj>(l, n);
         }
     };
 
     template <typename Obj>
-    requires (std::derived_from<Obj, Object>)
+    requires (std::is_base_of_v<Object, Obj> && !std::is_same_v<Obj,Object>)
     struct Extractor<const Obj*> {
-        static const Obj*   get(lua_State* l, int n)
+        static Expect<const Obj*>   get(lua_State* l, int n)
         {
-            return static_cast<const Obj*>(object(l, n, meta<Obj>(), CONST));
+            return object_as<Obj>(l, n, CONST);
         }
     };
 

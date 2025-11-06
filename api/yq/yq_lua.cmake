@@ -9,7 +9,6 @@
 add_library(yq_lua SHARED
     lua/LuaVM.cpp
     lua/lua.cpp
-    lua/metaobject.cpp
 )
 
 target_include_directories(yq_lua

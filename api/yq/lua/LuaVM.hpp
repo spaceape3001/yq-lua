@@ -44,6 +44,8 @@ namespace yq {
         
         std::error_code     status() const;
         
+        bool                invalid() const { return !m_lua; }
+        
         operator lua_State*() const { return m_lua; }
         
         //! Sets a output printer 

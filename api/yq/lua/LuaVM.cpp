@@ -5,7 +5,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "LuaVM.hpp"
-#include "LuaVM.hxx"
 #include "logging.hpp"
 #include "lualua.hpp"
 
@@ -61,7 +60,7 @@ namespace yq {
         m_lua   = luaL_newstate();
         lua_setwarnf(m_lua, luaWarn, cfg.warnings);
         luaL_openlibs(m_lua);
-        lua::set(m_lua, GLOBAL, lua::VM, this);
+        lua::set(m_lua, GLOBAL, lua::keyVM, this);
     }
     
     LuaVM::~LuaVM()
@@ -79,9 +78,9 @@ namespace yq {
 
     std::error_code    LuaVM::execute(const std::string& str)
     {
-        if(!m_lua){
+        if(invalid()){
             luaWarning << "Invalid LuaVM";
-            return errors::lua_badvm();
+            return errors::lua_bad_vm();
         }
         
         return luaL_dostring(m_lua, str.c_str()) ? errors::lua_runtime() : std::error_code();
@@ -89,9 +88,9 @@ namespace yq {
     
     std::error_code    LuaVM::execfile(const std::filesystem::path&  fp)
     {
-        if(!m_lua){
+        if(invalid()){
             luaWarning << "Invalid LuaVM";
-            return errors::lua_badvm();
+            return errors::lua_bad_vm();
         }
         
         return luaL_dofile(m_lua, fp.c_str()) ? errors::lua_runtime() : std::error_code();
@@ -99,46 +98,46 @@ namespace yq {
 
     std::error_code    LuaVM::garbage_collect()
     {
-        if(!m_lua){
+        if(invalid()){
             luaWarning << "Invalid LuaVM";
-            return errors::lua_badvm();
+            return errors::lua_bad_vm();
         }
 
-        return lua::errored(lua_gc(m_lua, LUA_GCCOLLECT));
+        return lua::_error(lua_gc(m_lua, LUA_GCCOLLECT));
     }
     
     std::error_code    LuaVM::garbage_restart()
     {
-        if(!m_lua){
+        if(invalid()){
             luaWarning << "Invalid LuaVM";
-            return errors::lua_badvm();
+            return errors::lua_bad_vm();
         }
-        return lua::errored(lua_gc(m_lua, LUA_GCRESTART));
+        return lua::_error(lua_gc(m_lua, LUA_GCRESTART));
     }
     
     boolean_x   LuaVM::garbate_running() const
     {
-        if(!m_lua){
+        if(invalid()){
             luaWarning << "Invalid LuaVM";
-            return errors::lua_badvm();
+            return errors::lua_bad_vm();
         }
         return static_cast<bool>(lua_gc(m_lua, LUA_GCISRUNNING));
     }
     
     std::error_code   LuaVM::garbage_stop()
     {
-        if(!m_lua){
+        if(invalid()){
             luaWarning << "Invalid LuaVM";
-            return errors::lua_badvm();
+            return errors::lua_bad_vm();
         }
-        return lua::errored(lua_gc(m_lua, LUA_GCSTOP));
+        return lua::_error(lua_gc(m_lua, LUA_GCSTOP));
     }
     
     size_x LuaVM::garbage_size() const
     {
-        if(!m_lua){
+        if(invalid()){
             luaWarning << "Invalid LuaVM";
-            return errors::lua_badvm();
+            return errors::lua_bad_vm();
         }
         
         int kb  = lua_gc(m_lua, LUA_GCCOUNT);
@@ -149,7 +148,7 @@ namespace yq {
 
     void   LuaVM::init_global_functions()
     {
-        if(!m_lua){
+        if(invalid()){
             luaWarning << "Invalid LuaVM";
             return;
         }
@@ -233,11 +232,11 @@ namespace yq {
 
     std::error_code     LuaVM::status() const
     {
-        if(!m_lua){
+        if(invalid()){
             luaWarning << "Invalid LuaVM";
-            return errors::lua_badvm();
+            return errors::lua_bad_vm();
         }
-        return lua::errored(lua_status(m_lua));
+        return lua::_error(lua_status(m_lua));
     }
     
 #if 0    
