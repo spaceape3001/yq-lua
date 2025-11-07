@@ -1,0 +1,22 @@
+////////////////////////////////////////////////////////////////////////////////
+//
+//  YOUR QUILL
+//
+////////////////////////////////////////////////////////////////////////////////
+
+#pragma once
+
+#include <yq/lua/info/Info.hpp>
+
+namespace yq::lua {
+    class ModuleInfo : public Info {
+    public:
+    
+    protected:
+        ModuleInfo(const char*);
+        virtual ~ModuleInfo();
+    
+    private:
+    };
+
+}

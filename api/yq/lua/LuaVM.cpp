@@ -6,10 +6,12 @@
 
 #include "LuaVM.hpp"
 #include "logging.hpp"
+#include "impl.hpp"
 #include "lualua.hpp"
 
 #include <filesystem>
 #include <format>
+#include <yq/lua/keys.hpp>
 #include <yq/lua/errors.hpp>
 #include <yq/core/Stream.hpp>
 #include <yq/core/StreamOps.hpp>

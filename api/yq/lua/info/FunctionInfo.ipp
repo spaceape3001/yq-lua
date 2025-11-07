@@ -1,0 +1,19 @@
+////////////////////////////////////////////////////////////////////////////////
+//
+//  YOUR QUILL
+//
+////////////////////////////////////////////////////////////////////////////////
+
+#pragma once
+
+#include <yq/lua/info/FunctionInfo.hpp>
+
+namespace yq::lua {
+    FunctionInfo::FunctionInfo(const char*z) : Info(z)
+    {
+    }
+    
+    FunctionInfo::~FunctionInfo()
+    {
+    }
+}
