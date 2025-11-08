@@ -6,13 +6,17 @@
 
 #pragma once
 
-#include <yq/lua/info/Info.hpp>
+#include <yq/lua/info/ModuleInfo.hpp>
 
 namespace yq::lua {
-    class TypeInfo : public Info {
+    class TypeInfo : public ModuleInfo {
     public:
     
+        virtual bool   is_type() const override { return true; }
+
     protected:
+        friend class Repo;
+
         TypeInfo(const TypeMeta&);
         virtual ~TypeInfo();
     

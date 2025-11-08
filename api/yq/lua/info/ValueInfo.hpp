@@ -15,14 +15,22 @@ namespace yq::lua {
         const type_t&   type() const { return m_type; }
         const value_t&  value() const { return m_value; }
         
+        virtual bool    is_value() const override { return true; }
+        virtual bool    is_global() const override;
+        void            type(const type_t&);
+        virtual void    install(InstallInfoAPI&) const;
+
     protected:
+        friend class ModuleInfo;
+        friend class FunctionInfo;
+        friend class Repo;
         
-        ValueInfo();
+        ValueInfo(const char*);
         virtual ~ValueInfo();
         
     private:
-        friend class Repo;
-        
+        bool    push_it(InstallInfoAPI&) const;
+    
         type_t      m_type;
         value_t     m_value;
     };

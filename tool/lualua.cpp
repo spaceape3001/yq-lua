@@ -5,9 +5,12 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include <yq/lua/LuaVM.hpp>
+#include <yq/lua/lualua.hpp>
 #include <yq/core/Logging.hpp>
-#include <yq/process/PluginLoader.hpp>
+#include <yq/lua/info/FunctionInfo.hpp>
+#include <yq/lua/info/ModuleInfo.hpp>
 #include <yq/meta/Meta.hpp>
+#include <yq/process/PluginLoader.hpp>
 #include <iostream>
 
 using namespace yq;
@@ -35,14 +38,18 @@ int main(int argc, char* argv[])
     log_to_std_output();
     Meta::init();
     load_plugin_dir("plugin/lua");
+    
+    yq::lua::reg(GLOBAL, "quit", fn_quit) -> brief("Quits the application");
+    yq::lua::reg(GLOBAL, "help", fn_help) -> brief("Help");
+    
     Meta::freeze();
     
-    LuaVM   lua;
-    lua.add_global_function("quit", fn_quit, "Quits the application");
-    lua.init_global_functions();
+    LuaVM   L;
+    lua::configure(L);
+    
     if(argc > 1){
         for(int i=1;i<argc;++i){
-            lua.execfile(argv[i]);
+            L.execfile(argv[i]);
         }
     } else {
         char    buffer[1024];
@@ -51,7 +58,7 @@ int main(int argc, char* argv[])
             std::cout << "> ";
             std::cin.getline(buffer, sizeof(buffer));
             buffer[1023]    = '\0';             // guard against null termination
-            auto ec = lua.execute(buffer);
+            auto ec = L.execute(buffer);
             if(ec != std::error_code()){
                 std::cout << ec.message() << "\n";
             }

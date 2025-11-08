@@ -16,7 +16,17 @@ namespace yq::lua {
         const argument_info_vector_t& results() const { return m_results; }
         const value_info_vector_t& upvalues() const { return m_upvalues; }
 
+        virtual bool   is_function() const override { return true; }
+        virtual bool   is_global() const override;
+        
+        FNLuaCallback   callback() const { return m_callback; }
+
+        virtual void    install(InstallInfoAPI&) const override;
+    
     protected:
+        friend class ModuleInfo;
+        friend class Repo;
+
         FunctionInfo(const char*);
         virtual ~FunctionInfo();
     
@@ -24,6 +34,9 @@ namespace yq::lua {
         argument_info_vector_t  m_arguments;
         argument_info_vector_t  m_results;
         value_info_vector_t     m_upvalues;
+        FNLuaCallback           m_callback      = nullptr;
+        
+        bool push_it(InstallInfoAPI&) const;
     };
 
 }

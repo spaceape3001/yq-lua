@@ -125,7 +125,7 @@ namespace yq::lua {
         lua_pop(l, 1);
     }
 
-    bool _push(lua_State* l, const value_t& val, int n)
+    bool _push(lua_State* l, const value_t& val, unsigned n)
     {
         if(std::get_if<std::monostate>(&val)){
             lua_pushnil(l);
@@ -152,9 +152,7 @@ namespace yq::lua {
             push(l, *p);
             return true;
         } else if(auto p = std::get_if<FNLuaCallback>(&val)){
-            if(n<0)
-                return false;
-            push(l, *p, n);
+            push(l, *p, (int) n);
             return true;
         } else  
             return false;
@@ -171,8 +169,8 @@ namespace yq::lua {
         }
         
         lua_newtable(l);
-        set(l, -1, TABLE, keyPointer, (void*) obj);
-        set(l, -1, TABLE, keyMeta, (void*) &(obj->metaInfo()));
+        set(l, -1, TABLE, keyPointer, RAW, obj);
+        set(l, -1, TABLE, keyMeta, RAW, (void*) &(obj->metaInfo()));
         set(l, -1, TABLE, keyFlags, flags.value());
         
         Refable* ref    = dynamic_cast<Refable*>(obj);

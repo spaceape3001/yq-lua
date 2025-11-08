@@ -50,6 +50,7 @@ namespace yq::lua {
     void                _pop(lua_State* l);
 
     std::error_code     _push(lua_State* l, Object* obj, XFlags flags);
+    bool                _push(lua_State* l, const value_t& val, unsigned n=0);
 
     //! Generic type string to a lua type ID (don't use with the meta)
     std::string_view    _type(int);

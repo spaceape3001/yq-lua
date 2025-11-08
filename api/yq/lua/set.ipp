@@ -114,7 +114,7 @@ namespace yq::lua {
         return {};
     }
     
-    std::error_code         set(lua_State*l, int n, table_k, const char* key, void* v)
+    std::error_code         set(lua_State*l, int n, table_k, const char* key, raw_k, void* v)
     {
         if(!l)
             return errors::lua_null();
@@ -210,7 +210,7 @@ namespace yq::lua {
         return {};
     }
     
-    std::error_code     set(lua_State*l, global_k, const char* key, void* v)
+    std::error_code     set(lua_State*l, global_k, const char* key, raw_k, void* v)
     {
         if(!l)
             return errors::lua_null();

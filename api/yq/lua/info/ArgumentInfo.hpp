@@ -15,8 +15,12 @@ namespace yq::lua {
     
         int             index() const { return m_index; }
         const type_t&   type() const { return m_type; }
+
+        virtual bool   is_argument() const override { return true; }
     
     protected:
+        friend class FunctionInfo;
+        
         ArgumentInfo(const char* z);
         virtual ~ArgumentInfo();
     

@@ -6,8 +6,29 @@
 
 #pragma once
 
-#include <yq/lua/help.hpp>
+#include <yq/lua/info.hpp>
+#include <yq/lua/repo.hpp>
 #include <yq/meta/Meta.hpp>
 
 namespace yq::lua {
+    const ModuleInfo*   info(global_k)
+    {
+        return Repo::instance().info(GLOBAL);
+    }
+    
+    const ModuleInfo*   info(module_k, const char*k)
+    {
+        return Repo::instance().info(MODULE, k);
+    }
+    
+    const ObjectInfo*   info(const ObjectMeta&om)
+    {
+        return Repo::instance().info(om);
+    }
+    
+    const TypeInfo*     info(const TypeMeta&tm)
+    {
+        return Repo::instance().info(tm);
+    }
+
 }
