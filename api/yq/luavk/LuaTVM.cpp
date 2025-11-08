@@ -6,7 +6,6 @@
 
 #include "LuaTVM.hpp"
 
-#include <yq/lua/lualua.hpp>
 #include <yq/lua/lualua.hxx>
 #include <yq/tachyon/api/TachyonMetaWriter.hpp>
 #include <yq/luavk/command/ExecuteFileCommand.hpp>
@@ -17,30 +16,71 @@
 YQ_TACHYON_IMPLEMENT(yq::lua::LuaTVM)
 
 namespace yq::lua {
+    LuaChannel::LuaChannel()
+    {
+    }
+    
+    LuaChannel::~LuaChannel()
+    {
+    }
+    
+    bool   LuaChannel::write(const char* buf, size_t cb)
+    {
+        if(buffer && buf && cb)
+            buffer -> append(buf, cb);
+        return true;
+    }
+
+    static void tvmLuaWarning(void*ud, const char* msg, int)
+    {
+        if(ud)
+            (*(LuaChannel*) ud) << msg;
+    }
+
+
     LuaTVM::LuaTVM()
     {
+        m_lua   = luaL_newstate();
+        lua_setwarnf(m_lua, tvmLuaWarning, &m_warning);
+        luaL_openlibs(m_lua);
+        lua::set(m_lua, GLOBAL, "print", lua::lh_write_stream, UPVALUES, &m_output);
+        lua::configure(m_lua);
     }
     
     LuaTVM::~LuaTVM()
     {
+        if(m_lua){
+            lua_close(m_lua);
+            m_lua   = nullptr;
+        }
     }
 
     void    LuaTVM::on_exec_file(const ExecuteFileCommand& cmd)
     {
-        auto ec = m_lua.execfile(cmd.file());
-        send(new ExecuteFileEvent({.cause=&cmd}, cmd.file(), ec));
-        send_output();
+        if(!m_lua)
+            return;
+    
+        std::string     error, warning, output;
+        m_output.buffer     = &output;
+        m_warning.buffer    = &warning;
+        m_error.buffer      = &error;
+        auto ec = luaL_dofile(m_lua, cmd.file().c_str()) ? errors::lua_runtime() : std::error_code();;
+        send(new ExecuteFileEvent({.cause=&cmd}, cmd.file(), std::move(output), std::move(warning), std::move(error), ec));
+        m_output.buffer = m_warning.buffer = m_error.buffer = nullptr;
     }
 
     void    LuaTVM::on_exec_string(const ExecuteStringCommand& cmd)
     {
-        auto ec = m_lua.execute(cmd.text());
-        send(new ExecuteStringEvent({.cause=&cmd}, cmd.text(), ec));
-        send_output();
-    }
+        if(!m_lua)
+            return;
 
-    void    LuaTVM::send_output()
-    {
+        std::string     error, warning, output;
+        m_output.buffer     = &output;
+        m_warning.buffer    = &warning;
+        m_error.buffer      = &error;
+        auto ec = luaL_dostring(m_lua, cmd.text().c_str()) ? errors::lua_runtime() : std::error_code();
+        send(new ExecuteStringEvent({.cause=&cmd}, cmd.text(), std::move(output), std::move(warning), std::move(error), ec));
+        m_output.buffer = m_warning.buffer = m_error.buffer = nullptr;
     }
 
     tachyon::Execution   LuaTVM::setup(const tachyon::Context&ctx) 

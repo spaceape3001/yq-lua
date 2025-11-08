@@ -6,20 +6,19 @@
 
 #pragma once
 
-#include <yq/luavk/event/LuaEvent.hpp>
+#include <yq/luavk/event/ExecuteEvent.hpp>
 #include <filesystem>
 
 namespace yq::lua {
-    class ExecuteFileEvent : public LuaEvent {
-        YQ_OBJECT_DECLARE(ExecuteFileEvent, LuaEvent)
+    class ExecuteFileEvent : public ExecuteEvent {
+        YQ_OBJECT_DECLARE(ExecuteFileEvent, ExecuteEvent)
     public:
-        ExecuteFileEvent(const Header&, const std::filesystem::path&, const std::error_code&);
+        ExecuteFileEvent(const Header&, const std::filesystem::path&, std::string&& out, std::string&& warn, std::string&& err, const std::error_code&);
         virtual tachyon::PostCPtr    clone(rebind_k, const Header&) const override;
 
         static void init_meta();
         
         const std::filesystem::path&    file() const { return m_file; }
-        const std::error_code&          error() const { return m_error; }
 
     protected:
         ExecuteFileEvent(const ExecuteFileEvent&, const Header&);
@@ -28,7 +27,6 @@ namespace yq::lua {
     private:
 
         std::filesystem::path   m_file;
-        std::error_code         m_error;
 
         ExecuteFileEvent(const ExecuteFileEvent&) = delete;
         ExecuteFileEvent(ExecuteFileEvent&&) = delete;

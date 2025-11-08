@@ -11,13 +11,13 @@ YQ_OBJECT_IMPLEMENT(yq::lua::ExecuteStringEvent)
 
 namespace yq::lua {
 
-    ExecuteStringEvent::ExecuteStringEvent(const Header&h, std::string_view v, const std::error_code&ec) : 
-        LuaEvent(h), m_text(v), m_error(ec)
+    ExecuteStringEvent::ExecuteStringEvent(const Header&h, std::string_view cmd, std::string&& out, std::string&& warn, std::string&& err, const std::error_code& ec) :
+        ExecuteEvent(h, std::move(out), std::move(warn), std::move(err), ec), m_command(cmd)
     {
     }
-
+    
     ExecuteStringEvent::ExecuteStringEvent(const ExecuteStringEvent& cp, const Header& h) : 
-        LuaEvent(cp, h), m_text(cp.m_text), m_error(cp.m_error)
+        ExecuteEvent(cp, h), m_command(cp.m_command)
     {
     }
     
@@ -36,6 +36,6 @@ namespace yq::lua {
     {
         auto w = writer<ExecuteStringEvent>();
         w.description("Lua Execute String Event");
-        w.property("text", &ExecuteStringEvent::m_text);
+        w.property("command", &ExecuteStringEvent::m_command);
     }
 }

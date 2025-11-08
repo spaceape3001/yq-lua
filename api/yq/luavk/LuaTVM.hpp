@@ -8,10 +8,19 @@
 
 #include <yq/lua/LuaVM.hpp>
 #include <yq/tachyon/api/Tachyon.hpp>
+#include <yq/core/Stream.hpp>
 
 namespace yq::lua {
     class ExecuteStringCommand;
     class ExecuteFileCommand;
+    
+    struct LuaChannel : public Stream {
+        std::string*        buffer  = nullptr;
+        virtual bool        write(const char* z, size_t cb);
+        
+        LuaChannel();
+        ~LuaChannel();
+    };
     
     class LuaTVM : public tachyon::Tachyon {
         YQ_TACHYON_DECLARE(LuaTVM, tachyon::Tachyon)
@@ -27,12 +36,11 @@ namespace yq::lua {
         virtual tachyon::Execution   teardown(const tachyon::Context&) override;
 
     private:
-        LuaVM      m_lua;
-        bool       m_init       = false;
+        lua_State*      m_lua       = nullptr;
+        LuaChannel      m_output, m_error, m_warning;
+        bool            m_init       = false;
         
         void    on_exec_file(const ExecuteFileCommand&);
         void    on_exec_string(const ExecuteStringCommand&);
-        
-        void    send_output();
     };
 }

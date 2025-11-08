@@ -39,7 +39,7 @@ namespace yq {
         m_lua   = luaL_newstate();
         lua_setwarnf(m_lua, luaWarn, cfg.warnings);
         luaL_openlibs(m_lua);
-        lua::set(m_lua, GLOBAL, lua::keyVM, this);
+        lua::set(m_lua, GLOBAL, lua::keyVM, RAW, this);
     }
     
     LuaVM::~LuaVM()

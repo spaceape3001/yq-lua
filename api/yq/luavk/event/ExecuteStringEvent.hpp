@@ -6,19 +6,18 @@
 
 #pragma once
 
-#include <yq/luavk/event/LuaEvent.hpp>
+#include <yq/luavk/event/ExecuteEvent.hpp>
 
 namespace yq::lua {
-    class ExecuteStringEvent : public LuaEvent {
-        YQ_OBJECT_DECLARE(ExecuteStringEvent, LuaEvent)
+    class ExecuteStringEvent : public ExecuteEvent {
+        YQ_OBJECT_DECLARE(ExecuteStringEvent, ExecuteEvent)
     public:
-        ExecuteStringEvent(const Header&, std::string_view, const std::error_code&);
+        ExecuteStringEvent(const Header&, std::string_view, std::string&& out, std::string&& warn, std::string&& err, const std::error_code&);
         virtual tachyon::PostCPtr    clone(rebind_k, const Header&) const override;
 
         static void init_meta();
         
-        const std::string&      text() const { return m_text; }
-        const std::error_code&  error() const { return m_error; }
+        const std::string&      command() const { return m_command; }
 
     protected:
         ExecuteStringEvent(const ExecuteStringEvent&, const Header&);
@@ -26,8 +25,7 @@ namespace yq::lua {
         
     private:
 
-        std::string         m_text;
-        std::error_code     m_error;
+        std::string         m_command;
 
         ExecuteStringEvent(const ExecuteStringEvent&) = delete;
         ExecuteStringEvent(ExecuteStringEvent&&) = delete;

@@ -11,6 +11,7 @@ add_library(yq_luavk SHARED
     luavk/command/ExecuteFileCommand.cpp
     luavk/command/ExecuteStringCommand.cpp
     luavk/command/LuaCommand.cpp
+    luavk/event/ExecuteEvent.cpp
     luavk/event/ExecuteFileEvent.cpp
     luavk/event/ExecuteStringEvent.cpp
     luavk/event/LuaEvent.cpp

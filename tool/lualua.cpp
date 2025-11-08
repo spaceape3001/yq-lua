@@ -41,6 +41,7 @@ int main(int argc, char* argv[])
     
     yq::lua::reg(GLOBAL, "quit", fn_quit) -> brief("Quits the application");
     yq::lua::reg(GLOBAL, "help", fn_help) -> brief("Help");
+    yq::lua::reg(GLOBAL, "print", lua::lh_write_cout) -> brief("Help");
     
     Meta::freeze();
     

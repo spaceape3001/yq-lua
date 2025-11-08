@@ -20,6 +20,8 @@ namespace yq::lua {
         TypeInfo(const TypeMeta&);
         virtual ~TypeInfo();
     
+        // printer helpers go in here
+    
     private:
     
         const TypeMeta& m_meta;

@@ -86,6 +86,14 @@ namespace yq::lua {
         return {};
     }
 
+    std::error_code     push(lua_State* l, raw_k, void* v)
+    {
+        if(!l)
+            return errors::lua_null();
+        lua_pushlightuserdata(l, v);
+        return {};
+    }
+
     std::error_code     push(lua_State*l, FNLuaCallback fn)
     {
         if(!l)

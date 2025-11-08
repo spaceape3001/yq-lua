@@ -11,13 +11,13 @@ YQ_OBJECT_IMPLEMENT(yq::lua::ExecuteFileEvent)
 
 namespace yq::lua {
 
-    ExecuteFileEvent::ExecuteFileEvent(const Header&h, const std::filesystem::path& v, const std::error_code& ec) : 
-        LuaEvent(h), m_file(v), m_error(ec)
+    ExecuteFileEvent::ExecuteFileEvent(const Header&h, const std::filesystem::path&v, std::string&& out, std::string&& warn, std::string&& err, const std::error_code&ec) :
+        ExecuteEvent(h, std::move(out), std::move(warn), std::move(err), ec), m_file(v)
     {
     }
 
     ExecuteFileEvent::ExecuteFileEvent(const ExecuteFileEvent& cp, const Header& h) : 
-        LuaEvent(cp, h), m_file(cp.m_file), m_error(cp.m_error)
+        ExecuteEvent(cp, h), m_file(cp.m_file)
     {
     }
     

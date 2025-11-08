@@ -21,6 +21,8 @@ namespace yq::lua {
 
         ObjectInfo(const ObjectMeta&);
         virtual ~ObjectInfo();
+        
+        //  printer goes in here....
     
     private:
         const ObjectMeta&   m_meta;

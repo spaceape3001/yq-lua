@@ -22,6 +22,7 @@
 #include "register.ipp"
 #include "repo.ipp"
 #include "set.ipp"
+#include "writer.ipp"
 
 #include "info/ArgumentInfo.ipp"
 #include "info/FunctionInfo.ipp"
@@ -65,6 +66,16 @@ namespace yq::lua {
         return true;
     }
 
+#if 0
+    void    write(lua_State* l, all_k, const WriteOptions& options)
+    {
+        int nargs = lua_gettop(l);
+        for(int n=1;i<nargs;++n)0
+            write(l, n, options);
+        
+    }
+#endif
+
     LuaVM* vm(lua_State* l)
     {
         void_ptr_x  x = voidptr(l, GLOBAL, keyVM);
@@ -73,17 +84,3 @@ namespace yq::lua {
         return (LuaVM*) *x;
     }
 }
-
-#if 0
-#include "repo.ipp"
-
-#include "lualua.hpp"
-#include "errors.hpp"
-#include <yq/errors.hpp>
-#include <yq/core/Any.hpp>
-#include <yq/core/Flags.hpp>
-#include <yq/core/Object.hpp>
-#include <yq/core/Ref.hpp>
-#include <yq/meta/ObjectMeta.hpp>
-#include <lua.hpp>
-#endif
