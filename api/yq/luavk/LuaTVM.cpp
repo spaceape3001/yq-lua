@@ -6,6 +6,7 @@
 
 #include "LuaTVM.hpp"
 
+#include <yq/lua/logging.hpp>
 #include <yq/lua/lualua.hxx>
 #include <yq/tachyon/api/TachyonMetaWriter.hpp>
 #include <yq/luavk/command/ExecuteFileCommand.hpp>
@@ -59,7 +60,8 @@ namespace yq::lua {
     {
         if(!m_lua)
             return;
-    
+            
+        luaInfo << "Execute file: " << cmd.file();    
         std::string     error, warning, output;
         m_output.buffer     = &output;
         m_warning.buffer    = &warning;

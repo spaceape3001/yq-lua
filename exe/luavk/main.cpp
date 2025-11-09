@@ -42,6 +42,10 @@ int main(int argc, char* argv[])
     
     Ref<LuaTVM> tvm = LuaTVM::create<LuaTVM>();
     Ref<LuaWin> w   = LuaWin::create<LuaWin>(tvm->id());
+    
+    tvm->subscribe(w->id());
+    w->subscribe(tvm->id());
+    
     tvm -> subscribe(w->id());
     tvm -> owner(PUSH, AUXILLARY);
     

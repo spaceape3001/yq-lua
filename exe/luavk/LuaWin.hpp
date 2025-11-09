@@ -10,7 +10,13 @@
 
 namespace yq::tachyon {
     struct Payload;
+    class UIConsole;
 }
+
+namespace yq::lua {
+    class ExecuteFileEvent;
+    class ExecuteStringEvent;
+};
 
 using namespace yq;
 //using namespace yq::lua;
@@ -40,10 +46,16 @@ public:
     void    cmd_user_input(const Payload&);
     void    cmd_lua_file();
 
+    virtual Execution   setup(const Context&) override;
+    
+private:
+    void    on_execute_file(const yq::lua::ExecuteFileEvent&);
+    void    on_execute_string(const yq::lua::ExecuteStringEvent&);
 
 private:
     void    _script(const std::filesystem::path&);
 
     FileMode                    m_fileMode = FileMode::None;
     yq::tachyon::TachyonID      m_lua;
+    UIConsole*                  m_console   = nullptr;
 };
