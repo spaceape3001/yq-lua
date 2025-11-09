@@ -66,15 +66,10 @@ namespace yq::lua {
         return true;
     }
 
-#if 0
-    void    write(lua_State* l, all_k, const WriteOptions& options)
+    void    initialize()
     {
-        int nargs = lua_gettop(l);
-        for(int n=1;i<nargs;++n)0
-            write(l, n, options);
-        
+        Repo::instance();
     }
-#endif
 
     LuaVM* vm(lua_State* l)
     {

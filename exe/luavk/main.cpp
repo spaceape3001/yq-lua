@@ -6,6 +6,7 @@
 
 #include "LuaWin.hpp"
 
+#include <yq/lua/lualua.hpp>
 #include <yq/luavk/LuaTVM.hpp>
 #include <yq/process/PluginLoader.hpp>
 #include <yq/tachyon/application.hpp>
@@ -34,6 +35,8 @@ int main(int argc, char* argv[])
     Meta::init();
     load_plugin_dir("plugin/lua");
     Meta::init();
+    
+    lua::initialize();
 
     app.start();
     

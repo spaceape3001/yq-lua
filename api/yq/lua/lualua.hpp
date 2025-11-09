@@ -23,4 +23,6 @@ namespace yq::lua {
     // LuaVM from the lua state (could be null if unavailble)
     LuaVM*  vm(lua_State*);
     
+    void    initialize();
+    
 }
