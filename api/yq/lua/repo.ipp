@@ -112,10 +112,7 @@ namespace yq::lua {
         if(i != m_objects.end())
             return { const_cast<ObjectInfo*>(i->second), false };
 
-        ObjectInfo* base    = om.base() ? edit(*om.base()).first : nullptr;
-
         ObjectInfo* ret = new ObjectInfo(om);
-        ret -> m_base       = base;
         m_objects[om.id()]  = ret;
         return { ret, true };
     }

@@ -12,7 +12,6 @@ namespace yq::lua {
     class ObjectInfo : public ModuleInfo {
     public:
     
-        const ObjectInfo*   base() const { return m_base; }
         const ObjectMeta&   meta() const { return m_meta; }
         virtual bool        is_object() const override { return true; }
 
@@ -26,7 +25,6 @@ namespace yq::lua {
     
     private:
         const ObjectMeta&   m_meta;
-        const ObjectInfo*   m_base  = nullptr;
     };
 
 }
